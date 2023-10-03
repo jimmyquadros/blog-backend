@@ -13,7 +13,6 @@ require('./models/userModel');
 require('./models/postModel');
 require('./models/commentModel');
 const connectDB = require('./config/db');
-connectDB();
 
 const app = express();
 
@@ -38,4 +37,6 @@ app.use('/post', require('./routes/postRouter'));
 
 app.use(require('./middleware/errorMiddleware'));
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+connectDB().then(() => {
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+})
