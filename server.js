@@ -22,11 +22,6 @@ app.use(cors(corsOptions));
 require('./config/passport')(passport);
 app.use(passport.initialize());
 
-console.log(
-    JSON.stringify(passport.authenticate('login'))
-
-)
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
