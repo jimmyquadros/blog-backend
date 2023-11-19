@@ -2,6 +2,13 @@ const asyncHandler = require('express-async-handler');
 const Comment = require('mongoose').model('Comment');
 const Post = require('mongoose').model('Post');
 
+
+// Testing!
+exports.getError = (req, res, next) => {
+    res.status(418);
+    return next(new Error(["I'm a little teapot!", "Another Error!", "Third Error"]));
+}
+
 // @desc    get all comments for associated post id
 // @route   GET /comment/:id
 // @access  public
@@ -14,6 +21,7 @@ exports.getComments = asyncHandler(async (req, res, next) => {
                 root: id,
             }
         ).populate('user', 'name -_id')
+        // comments.forEach(e => console.log(e.children))
         res.json(comments);
     } catch (err) {
         res.status(401);
@@ -45,11 +53,13 @@ exports.updateComment = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     try {
         const comment = await Comment.findById(id);
+        // console.log('before: ', comment)
         if ((!req.user.roles.includes(9000) && comment.user.toString() !== req.user.id)) {
             res.status(401);
             return next(new Error('User not authenticated to modify post'));
         }
         Object.assign(comment, req.body);
+        // console.log('after: ', comment)
         if (req.body.user === false) {
             comment.user = undefined;
         }

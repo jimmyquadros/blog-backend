@@ -2,6 +2,12 @@ const asyncHandler = require('express-async-handler');
 const Post = require('mongoose').model('Post');
 const ObjectId = require('mongoose').Types.ObjectId;
 
+// Testing!
+exports.getError = (req, res, next) => {
+    res.status(418);
+    return next(new Error(["I'm a little teapot!", "Another Error!", "Third Error"]));
+}
+
 // @desc    gets a single post with associated id
 // @route   GET /post/:id
 // @access  public
@@ -72,6 +78,7 @@ exports.createPost = asyncHandler(async (req, res, next) => {
 // @route   PUT /post/:id
 // @access  Admin
 exports.updatePost = asyncHandler(async (req, res, next) => {
+    console.log('update request')
     const id = req.params.id;
     try {
         if (req.body.pub === false) {

@@ -3,6 +3,12 @@ const passport = require('passport');
 const {generateAccessToken, generateRefreshToken} = require('../lib/utils');
 const User = require('mongoose').model('User');
 
+// Testing!
+exports.getError = (req, res, next) => {
+    res.status(418);
+    return next(new Error(["I'm a little teapot!", "Another Error!", "Third Error"]));
+}
+
 // @desc    create new user
 // @route   POST /user/
 // @access  public

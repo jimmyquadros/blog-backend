@@ -4,17 +4,14 @@ const userController = require('../controllers/userController');
 const validator = require('../middleware/validationMiddleware');
 const passport = require('passport');
 const refreshTokenController = require('../controllers/refreshTokenController');
-
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
-
-// Test routes -DELETE
-router.get('/', passport.authenticate('jwtUser', { session: false }), (req, res, next) => res.json({ message: 'bingo' }))
-router.get('/admin', passport.authenticate('jwtAdmin', { session: false }), (req, res, next) => res.json({ message: 'bingo admin' }))
-
 router.post('/', validator.validateNewUser, userController.createUser);
-router.put('/', passport.authenticate('jwtUser', { session: false }), userController.updateUser)
+// router.post('/', validator.validateNewUser, userController.getError);
+// router.put('/', passport.authenticate('jwtUser', { session: false }), userController.updateUser)
+router.put('/', passport.authenticate('jwtUser', { session: false }), userController.getError)
 router.post('/login', userController.loginUser);
+// router.post('/login', userController.getError);
 router.get('/logout', userController.logoutUser);
 router.get('/refresh', refreshTokenController.handleRefreshToken);
 

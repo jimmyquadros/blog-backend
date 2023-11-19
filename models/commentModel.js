@@ -45,6 +45,7 @@ commentSchema.pre('save', async function(next) {
 
 
 commentSchema.pre('find', function (next) {
+    console.log(this.children)
     this.populate({
         path: 'children',
         populate: {

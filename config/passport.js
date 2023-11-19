@@ -73,15 +73,19 @@ const jwtUserStrategy = new JwtStrategy(
 const jwtAdminStrategy = new JwtStrategy(
     options,
     async (payload, done) => {
+        console.log('doing the check')
         try {
             const user = await User.findById(payload.id).exec();
             if (!user) {
+                console.log('fail one')
                 return done(null, false, { message: 'user not found' });
             };
-            if (!user.roles.includes(9000)) {
-                return done(null, false, { message: 'user not authorized' });
+            
+            if (user.roles.includes(9000) || user.roles.includes(1000)) {
+                console.log('success')
+                return done(null, user);
             }
-            return done(null, user);
+            return done(null, false, { message: 'user not authorized' });
         } catch (err) {
             return done(err, null);
         }
