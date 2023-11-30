@@ -11,46 +11,32 @@ const commentSchema = mongoose.Schema(
             ref: 'Post',
             required: true,
         },
-        parent: [{
+        parent: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Comment',
-        }],
+        },
         content: {
             type: String,
             required: true,
         },
-        children: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comment',
-        }],
     },
     {
         timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     }
 )
 
-// if comment has a parent update the parent's child array
-commentSchema.pre('save', async function(next) {
-    this.populate('user')
-    if (this.isNew) {
-        const PostModel = mongoose.model('Post');
-        await PostModel.findByIdAndUpdate(this.root, {$inc: {cmntCount: 1}});
-    }
-    if (!this.isNew || !this.parent) next();
-    const CommentModel = mongoose.model('Comment');
-    await CommentModel.findByIdAndUpdate(this.parent.at(-1),
-        { "$push": { "children": this._id } })
-    next();
-})
-
+commentSchema.virtual('children', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'parent',
+    justOne: false,
+});
 
 commentSchema.pre('find', function (next) {
-    console.log(this.children)
     this.populate({
-        path: 'children',
-        populate: {
-            path: 'user'
-        }
+        path: 'children user',
     })
     next();
 });

@@ -9,6 +9,8 @@ router.get('/:id', passport.authenticate(['jwtAdmin', 'anonymous'], { session: f
 router.get('/', passport.authenticate(['jwtAdmin', 'anonymous'], { session: false }), postController.getPosts);
 // router.get('/', passport.authenticate(['jwtAdmin', 'anonymous'], { session: false }), postController.getError);
 
+router.get('/comments/:id', postController.getPostComments);
+
 router.post('/', passport.authenticate('jwtAdmin', { session: false }), postController.createPost);
 router.put('/:id', passport.authenticate('jwtAdmin', { session: false }), postController.updatePost);
 // router.post('/', passport.authenticate('jwtAdmin', { session: false }), postController.getError);

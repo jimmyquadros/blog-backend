@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('mongoose').model('Post');
+const Comment = require('mongoose').model('Comment');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 // Testing!
@@ -51,6 +52,25 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
         pageSize: posts.length,
         posts,
     })
+})
+
+// @desc    returns an array of comments for a post based on id
+// @route   GET /post/comments/:id
+// @access  public
+exports.getPostComments = asyncHandler(async (req, res, next)=> {
+    const id = req.params.id;
+    try {
+        const comments = await Comment.find(
+            {
+                parent : { "$exists" : false },
+                root: id,
+            }
+        )
+        res.json(comments);
+    } catch (err) {
+        res.status(401);
+        return next(err);
+    }
 })
 
 // @desc    creates a new post

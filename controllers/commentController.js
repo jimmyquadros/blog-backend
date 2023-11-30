@@ -9,19 +9,17 @@ exports.getError = (req, res, next) => {
     return next(new Error(["I'm a little teapot!", "Another Error!", "Third Error"]));
 }
 
-// @desc    get all comments for associated post id
-// @route   GET /comment/:id
+// @desc    get comment by id
+// @route   GET /comment/:id/
 // @access  public
 exports.getComments = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     try {
         const comments = await Comment.find(
             {
-                parent : { "$size" : 0 },
-                root: id,
+                _id: id,
             }
-        ).populate('user', 'name -_id')
-        // comments.forEach(e => console.log(e.children))
+        )
         res.json(comments);
     } catch (err) {
         res.status(401);
@@ -37,9 +35,12 @@ exports.postComment = asyncHandler(async (req, res, next) => {
         user: req.user.id,
         ...req.body
     };
+    console.log(req.body);
     try {
         let newComment = await Comment.create(comment);
-        res.json(newComment);
+        let popComment = await Comment.find({_id: newComment._id});
+        await Post.findOneAndUpdate({_id: req.body.root}, {$inc: {'cmntCount' : 1}});
+        res.json(popComment);
     } catch(err) {
         res.status(401);
         return next(err);
