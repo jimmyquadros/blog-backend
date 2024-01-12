@@ -74,12 +74,14 @@ const jwtAdminStrategy = new JwtStrategy(
     options,
     async (payload, done) => {
         try {
+            // console.log('jwtadmin running...')
             const user = await User.findById(payload.id).exec();
             if (!user) {
                 return done(null, false, { message: 'user not found' });
             };
             
             if (user.roles.includes(9000) || user.roles.includes(1000)) {
+                // console.log('admin ok')
                 return done(null, user);
             }
             return done(null, false, { message: 'user not authorized' });

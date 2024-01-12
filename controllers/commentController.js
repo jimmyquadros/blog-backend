@@ -2,13 +2,6 @@ const asyncHandler = require('express-async-handler');
 const Comment = require('mongoose').model('Comment');
 const Post = require('mongoose').model('Post');
 
-
-// Testing!
-exports.getError = (req, res, next) => {
-    res.status(418);
-    return next(new Error(["I'm a little teapot!", "Another Error!", "Third Error"]));
-}
-
 // @desc    get comment by id
 // @route   GET /comment/:id/
 // @access  public
@@ -27,6 +20,24 @@ exports.getComments = asyncHandler(async (req, res, next) => {
     }
 });
 
+exports.postDelay = asyncHandler(async (req, res, next) => {
+    setTimeout(async () => {
+        const comment = {
+            user: req.user.id,
+            ...req.body
+        };
+        try {
+            let newComment = await Comment.create(comment);
+            let popComment = await Comment.find({_id: newComment._id});
+            await Post.findOneAndUpdate({_id: req.body.root}, {$inc: {'cmntCount' : 1}});
+            res.json(popComment);
+        } catch(err) {
+            res.status(401);
+            return next(err);
+        }
+    }, 3000);
+})
+
 // @desc    create a comment associated with root post id
 // @route   POST /comment/
 // @access  User
@@ -35,7 +46,6 @@ exports.postComment = asyncHandler(async (req, res, next) => {
         user: req.user.id,
         ...req.body
     };
-    console.log(req.body);
     try {
         let newComment = await Comment.create(comment);
         let popComment = await Comment.find({_id: newComment._id});
@@ -54,13 +64,11 @@ exports.updateComment = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     try {
         const comment = await Comment.findById(id);
-        // console.log('before: ', comment)
         if ((!req.user.roles.includes(9000) && comment.user.toString() !== req.user.id)) {
             res.status(401);
             return next(new Error('User not authenticated to modify post'));
         }
         Object.assign(comment, req.body);
-        // console.log('after: ', comment)
         if (req.body.user === false) {
             comment.user = undefined;
         }
@@ -77,12 +85,10 @@ exports.updateComment = asyncHandler(async (req, res, next) => {
 // @access  Admin
 exports.deleteComment = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
-
     try {
         await Comment.findByIdAndDelete(id);
         res.json({message: 'comment successfully deleted'});
     } catch (err) {
-        // console.log(err)
         res.status(401);
         return next(err);
     }

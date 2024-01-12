@@ -7,11 +7,8 @@ const refreshTokenController = require('../controllers/refreshTokenController');
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 router.post('/', validator.validateNewUser, userController.createUser);
-// router.post('/', validator.validateNewUser, userController.getError);
-// router.put('/', passport.authenticate('jwtUser', { session: false }), userController.updateUser)
 router.put('/', passport.authenticate('jwtUser', { session: false }), userController.getError)
 router.post('/login', userController.loginUser);
-// router.post('/login', userController.getError);
 router.get('/logout', userController.logoutUser);
 router.get('/refresh', refreshTokenController.handleRefreshToken);
 

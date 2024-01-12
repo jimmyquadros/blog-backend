@@ -26,6 +26,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
+app.use(function(req, res, next) {
+    res.setHeader('Content-Type', 'text/plain')
+    next();
+});
+
 app.use('/comment', require('./routes/commentRouter'));
 app.use('/user', require('./routes/userRouter'));
 app.use('/post', require('./routes/postRouter'));

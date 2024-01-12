@@ -98,7 +98,6 @@ exports.createPost = asyncHandler(async (req, res, next) => {
 // @route   PUT /post/:id
 // @access  Admin
 exports.updatePost = asyncHandler(async (req, res, next) => {
-    console.log('update request')
     const id = req.params.id;
     try {
         if (req.body.pub === false) {
