@@ -31,6 +31,11 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use((req, res, next) => {
+    console.log(JSON.stringify(req.headers))
+    next();
+})
+
 app.use('/comment', require('./routes/commentRouter'));
 app.use('/user', require('./routes/userRouter'));
 app.use('/post', require('./routes/postRouter'));
