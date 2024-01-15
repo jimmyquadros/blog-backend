@@ -5,8 +5,8 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5000',
     'https://blog-frontend-dun.vercel.app',
-    'https://blog-frontend-l2bvh0xqi-jquads-projects.vercel.app',
-    'blog-frontend-b1akt54g2-jquads-projects.vercel.app',
+    'blog-frontend-7zdicqgr2-jquads-projects.vercel.app',
+    'blog-frontend-git-main-jquads-projects.vercel.app',
 ];
 
 module.exports = allowedOrigins;
