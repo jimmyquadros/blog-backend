@@ -1,6 +1,8 @@
-##ENDPOINTS
+# BLOG CRUD BACKEND
 
-###USER
+## ENDPOINTS
+
+### USER
 
 | HTTP Method | URL | Authorization | Description |
 |---|---|---|---|
@@ -10,7 +12,7 @@
 | POST | http://localhost:5000/user/logout | Public | Update user refresh token and clears cookie |
 
 
-###POST
+### POST
 
 | HTTP Method | URL | Authorization | Description |
 |---|---|---|---|
@@ -23,7 +25,7 @@
 
 
 
-###COMMENT
+### COMMENT
 
 | HTTP Method | URL | Authorization | Description |
 |---|---|---|---|
